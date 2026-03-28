@@ -27,8 +27,8 @@ def user_interaction():
         top_vacancies = get_top_vacancies(sorted_vacancies, top_n)
         print_vacancies(top_vacancies)
 
-        input_user = input("Хотите сохранить вакансии в JSON? (да/нет): ").lower()
-        if input_user == "да":
+        input_user = input("Хотите сохранить вакансии в JSON? (y/anything): ").lower()
+        if input_user == "y":
             json_saver = JSONSaver('datas/vacancies.json')
             for vacancy in top_vacancies:
                 json_saver.add_vacancy(vacancy)
