@@ -6,9 +6,9 @@ from src.json import JSONSaver
 
 def user_interaction():
     search_query = input("Введите поисковый запрос: ").lower()
-    top_n = int(input("Введите количество вакансий для вывода в топ N: "))
+    top_n = input_top_n()
     filter_words = input("Введите ключевые слова для фильтрации вакансий: ").split()
-    salary_range = input("Введите диапазон зарплат (пример: 100000-150000): ")
+    salary_range = input_salary_range()
 
     hh_api = HeadHunterAPI()
     hh_vacancies = hh_api.get_vacancies(search_query)
