@@ -11,8 +11,11 @@ class HeadHunterAPI(AbstractVacancyAPI):
             'text': search_query,
             'per_page': 100
         }
-        response = requests.get(self.url, params=params)
-        if response.status_code == 200:
-            return response.json()['items']
-        else:
-            raise Exception(f"Failed to fetch vacancies. Status code: {response.status_code}")
+        try:
+            response = requests.get(self.url, params=params, timeout=10)
+            response.raise_for_status()
+            return response.json().get('items', [])
+        except requests.exceptions.RequestException:
+            return []
+
+        
