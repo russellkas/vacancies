@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vacancies Finder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<main class="container">
+    <h1>Поиск вакансий (Flask + HH API)</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="alerts">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('search') }}" method="post" class="search-form">
+        <label>
+            Поисковый запрос
+            <input type="text" name="query" value="{{ query or '' }}" placeholder="Python developer" required>
+        </label>
+
+        <label>
+            Top N вакансий
+            <input type="number" name="top_n" min="1" value="{{ top_n or '10' }}" required>
+        </label>
+
+        <label>
+            Диапазон зарплат (min-max)
+            <input type="text" name="salary_range" value="{{ salary_range or '0-10000000' }}" placeholder="100000-300000" required>
+        </label>
+
+        <label>
+            Ключевые слова (через пробел)
+            <input type="text" name="keywords" value="{{ keywords or '' }}" placeholder="flask docker api">
+        </label>
+
+        <button type="submit">Найти и сохранить в JSON</button>
+    </form>
+
+    {% if vacancies %}
+        <section>
+            <h2>Результаты</h2>
+            {% if vacancies[0] is string %}
+                <p>{{ vacancies[0] }}</p>
+            {% else %}
+                <ul class="vacancy-list">
+                    {% for vacancy in vacancies %}
+                        <li>
+                            <h3>{{ vacancy.title }}</h3>
+                            <p><b>Зарплата:</b> {{ vacancy.salary }}</p>
+                            <p><b>Описание:</b> {{ vacancy.description }}</p>
+                            <a href="{{ vacancy.link }}" target="_blank" rel="noopener noreferrer">Открыть вакансию</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </section>
+    {% endif %}
+</main>
+</body>
+</html>
