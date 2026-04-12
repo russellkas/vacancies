@@ -55,7 +55,14 @@
     .job-row{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:12px}
     .job-title{font-size:18px;line-height:1.2;font-weight:600;letter-spacing:-0.03em}
     .job-company{font-size:12px;color:#9b9b9b;white-space:nowrap;margin-top:3px}
-    .job-desc{font-size:16px;line-height:1.35;letter-spacing:-0.02em}
+    .job-desc{
+      font-size:16px;
+      line-height:1.35;
+      letter-spacing:-0.02em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
     .jobs-btn-wrap{margin-top:22px}
 
     .pattern-section{position:relative;background:#ece5d3;overflow:hidden}
@@ -149,7 +156,6 @@
           <p class="hero-sub">Discover jobs that match your skills, goals, and ambitions — all in one place.</p>
           <div class="hero-actions">
             <a class="btn small" href="#jobs">•&nbsp;&nbsp;Find jobs</a>
-            <a class="btn small" href="#companies">•&nbsp;&nbsp;Explore companies</a>
           </div>
         </div>
       </div>
@@ -185,7 +191,7 @@
                 <div class="job-item">
                   <div class="job-row">
                     <div class="job-title">{{ vacancy.title }}</div>
-                    <div class="job-company">Employer</div>
+                    <div class="job-company">{{ vacancy.employer }}</div>
                   </div>
                   <div class="job-desc">{{ vacancy.description }}</div>
                 </div>
@@ -228,9 +234,6 @@
               </div>
             {% endif %}
 
-            <div class="jobs-btn-wrap">
-              <a class="btn small" href="#">•&nbsp;&nbsp;Explore Jobs</a>
-            </div>
           </div>
         </div>
       </div>

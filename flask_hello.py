@@ -53,6 +53,7 @@ def create_app() -> Flask:
                 vacancy["alternate_url"],
                 vacancy.get("salary"),
                 vacancy.get("snippet", {}).get("responsibility"),
+                vacancy.get("employer", {}).get("name"),
             )
             for vacancy in hh_vacancies
         ]
