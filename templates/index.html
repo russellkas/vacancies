@@ -1,68 +1,278 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vacancies Finder</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JobSearch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --page:#efefef;
+      --text:#090909;
+      --muted:#6a6a6a;
+      --line:#d8d8d8;
+      --heroTop:#bad7f5;
+      --heroBottom:#ece5d7;
+      --blueBtn:#2e7fe8;
+      --yellow:#f1ec31;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:Inter, Arial, sans-serif;
+      background:var(--page);
+      color:var(--text);
+      min-width:1440px;
+    }
+    a{text-decoration:none;color:inherit}
+    img{display:block;max-width:100%}
+
+    .page{width:100%;margin:0 auto;background:var(--page)}
+
+    .serif{font-family:"Instrument Serif", Georgia, serif;font-weight:400;letter-spacing:-0.045em}
+
+    .hero{height:552px;background:linear-gradient(180deg,var(--heroTop) 0%, var(--heroBottom) 100%);padding:16px 20px 0}
+    .topbar{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:500;line-height:1}
+    .hero-center{text-align:center;padding-top:103px}
+    .hero-title-1{margin:0;font-size:82px;line-height:.9}
+    .hero-title-2{margin:0;font-size:78px;line-height:.93;letter-spacing:-0.075em;font-weight:900}
+    .hero-sub{margin:18px 0 0;font-size:17px;line-height:1.25;font-family:"Instrument Serif", Georgia, serif;letter-spacing:-0.01em}
+    .hero-actions{display:flex;justify-content:center;gap:14px;margin-top:28px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:53px;background:#030303;color:#fff;border:1px solid #030303;padding:0 23px;font-size:13px;font-weight:600;letter-spacing:.02em}
+    .btn.small{height:49px;padding:0 20px;font-size:12px}
+
+    .search{background:#efefef;padding:18px 21px 71px}
+    .search h2{margin:0 0 31px;text-align:center;font-size:64px;line-height:.98;letter-spacing:-0.075em;font-weight:900}
+    .search-grid{display:grid;grid-template-columns:766px 553px;column-gap:43px;align-items:start}
+    .search-card{min-height:536px;border-radius:8px;background:linear-gradient(180deg,#b5d3f2 0%, #ece5d5 100%);padding:36px 38px}
+    .field{width:100%;height:53px;border:none;outline:none;border-radius:9px;background:rgba(255,255,255,.63);padding:0 18px;font-size:14px;color:#222;margin-bottom:16px}
+    .submit{width:100%;height:35px;border:none;border-radius:8px;background:var(--blueBtn);color:#fff;font-size:12px;letter-spacing:.18em;cursor:pointer;text-transform:uppercase}
+    .alerts{list-style:none;padding:0;margin:0 0 12px}
+    .alerts li{background:rgba(255,255,255,.6);padding:10px 12px;border-radius:6px;margin-bottom:8px;font-size:14px}
+
+    .job-item{border-top:1px solid var(--line);padding:16px 0 18px}
+    .job-row{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:12px}
+    .job-title{font-size:18px;line-height:1.2;font-weight:600;letter-spacing:-0.03em}
+    .job-company{font-size:12px;color:#9b9b9b;white-space:nowrap;margin-top:3px}
+    .job-desc{font-size:16px;line-height:1.35;letter-spacing:-0.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .jobs-btn-wrap{margin-top:22px}
+
+    .pattern-section{position:relative;background:#ece5d3;overflow:hidden}
+    .pattern-section::before{content:"";position:absolute;inset:0;background:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,.58) 0 1px, transparent 1px 5px),
+        radial-gradient(circle at 68% 22%, rgba(255,255,255,.46) 0 1px, transparent 1px 4px),
+        radial-gradient(circle at 85% 68%, rgba(255,255,255,.52) 0 1px, transparent 1px 4px),
+        repeating-linear-gradient(115deg, rgba(118,107,72,.16) 0 2px, rgba(255,255,255,.04) 2px 10px, transparent 10px 38px),
+        repeating-radial-gradient(circle at 0 0, rgba(255,255,255,.12) 0 1px, transparent 1px 4px);
+      opacity:.72;mix-blend-mode:multiply;pointer-events:none}
+    .features{padding:82px 20px 74px;min-height:753px}
+    .features-inner{position:relative;z-index:1}
+    .features-title-1{margin:0;text-align:center;font-size:76px;line-height:.9}
+    .features-title-2{margin:2px 0 44px;text-align:center;font-size:74px;line-height:.95;letter-spacing:-0.075em;font-weight:900}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{background:#f5f5f5;border-radius:10px;min-height:287px;padding:28px 31px 24px}
+    .card h3{margin:0 0 14px;font-size:17px;line-height:1.15;letter-spacing:-0.03em;font-weight:600}
+    .card p{margin:0;font-size:16px;line-height:1.3;letter-spacing:-0.02em;max-width:360px}
+
+    .icon{width:39px;height:39px;border:1.8px solid #111;border-radius:50%;position:relative;margin-bottom:27px}
+    .icon.plus::before,.icon.plus::after,.icon.globe::before,.icon.arrow::before{content:"";position:absolute;background:#111}
+    .icon.plus::before{width:2px;height:22px;left:50%;top:8px;transform:translateX(-50%)}
+    .icon.plus::after{height:2px;width:22px;left:8px;top:50%;transform:translateY(-50%)}
+    .icon.globe::before{height:2px;width:24px;left:7px;top:50%;transform:translateY(-50%)}
+    .icon.globe::after{content:"";position:absolute;top:5px;left:11px;width:13px;height:25px;border-left:2px solid #111;border-right:2px solid #111;border-radius:50%}
+    .icon.arrow::before{height:2px;width:13px;right:8px;top:11px;transform:rotate(-45deg);transform-origin:right center}
+    .icon.arrow::after{content:"";position:absolute;right:8px;top:8px;width:10px;height:10px;border-right:2px solid #111;border-top:2px solid #111;transform:rotate(45deg)}
+
+    .testimonial{background:#efefef;padding:72px 20px 131px}
+    .testimonial-grid{display:grid;grid-template-columns:679px 1fr;column-gap:126px;align-items:center}
+    .portrait{width:679px;height:690px;background:#afd2fa;position:relative;overflow:hidden}
+    .portrait::before{content:"";position:absolute;inset:0;background:
+        linear-gradient(135deg, transparent 0 34%, rgba(255,255,255,.95) 34% 43%, transparent 43% 100%),
+        linear-gradient(320deg, transparent 0 59%, rgba(255,255,255,.95) 59% 69%, transparent 69% 100%),
+        linear-gradient(90deg, transparent 0 74%, rgba(255,255,255,.95) 74% 78%, transparent 78% 100%),
+        linear-gradient(180deg, transparent 0 15%, rgba(255,255,255,.95) 15% 22%, transparent 22% 100%);
+      opacity:.95;mix-blend-mode:screen;pointer-events:none;z-index:2}
+    .portrait img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.35) saturate(0) brightness(1.06);mix-blend-mode:multiply;position:relative;z-index:1}
+    .quote-mark{color:#d9ddeb;font-family:Georgia,serif;font-size:75px;line-height:1;margin-bottom:34px;margin-top:-24px}
+    .quote{margin:0 0 55px;font-size:34px;line-height:.96;letter-spacing:-0.06em;font-weight:900;max-width:470px}
+    .author{font-size:16px;font-weight:600;line-height:1.2;margin-bottom:6px}
+    .role{font-size:14px;color:#8c8c8c}
+
+    .cta{background:#eef0f5;padding:131px 20px 125px;text-align:center}
+    .cta h2{margin:0 0 36px;font-size:32px;line-height:1;letter-spacing:-0.05em;font-weight:900}
+
+    .footer{background:var(--yellow);padding:16px 20px 0;overflow:hidden}
+    .footer-top{display:flex;justify-content:space-between;align-items:center;font-size:14px;line-height:1;margin-bottom:18px}
+    .footer-links{display:flex;gap:24px}
+    .footer-art{height:294px;position:relative;overflow:hidden;margin-bottom:28px;background:
+        radial-gradient(circle at 18% 75%, rgba(0,0,0,.22) 0 1px, transparent 1px 4px),
+        radial-gradient(circle at 42% 18%, rgba(0,0,0,.16) 0 1px, transparent 1px 4px),
+        repeating-linear-gradient(132deg, rgba(81,79,0,.72) 0 6px, rgba(255,255,0,.12) 6px 18px, transparent 18px 34px),
+        linear-gradient(135deg, #f0ea30 0%, #efe92f 100%);
+      filter:contrast(1.08)}
+    .footer-logo{margin:0;font-size:210px;line-height:.82;letter-spacing:-0.09em;font-weight:900;color:rgba(106,103,11,.88);transform:translateY(10px);white-space:nowrap}
+  </style>
 </head>
 <body>
-<main class="container">
-    <h1>Поиск вакансий (Flask + HH API)</h1>
+  <div class="page">
+    <section class="hero">
+      <div class="topbar">
+        <a href="#">JobSearch</a>
+        <a href="#jobs">Find Jobs</a>
+      </div>
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class="alerts">
+      <div class="hero-center">
+        <h1 class="hero-title-1 serif">Find your</h1>
+        <h2 class="hero-title-2">next opportunity</h2>
+        <p class="hero-sub">Discover jobs that match your skills, goals, and ambitions — all in one place.</p>
+        <div class="hero-actions">
+          <a class="btn small" href="#jobs">•&nbsp;&nbsp;Find jobs</a>
+          <a class="btn small" href="#companies">•&nbsp;&nbsp;Explore companies</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="search" id="jobs">
+      <h2>Everything you need to find a job</h2>
+      <div class="search-grid">
+        <div class="search-card">
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              <ul class="alerts">
                 {% for message in messages %}
-                    <li>{{ message }}</li>
+                  <li>{{ message }}</li>
                 {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-
-    <form action="{{ url_for('search') }}" method="post" class="search-form">
-        <label>
-            Поисковый запрос
-            <input type="text" name="query" value="{{ query or '' }}" placeholder="Python developer" required>
-        </label>
-
-        <label>
-            Top N вакансий
-            <input type="number" name="top_n" min="1" value="{{ top_n or '10' }}" required>
-        </label>
-
-        <label>
-            Диапазон зарплат (min-max)
-            <input type="text" name="salary_range" value="{{ salary_range or '0-10000000' }}" placeholder="100000-300000" required>
-        </label>
-
-        <label>
-            Ключевые слова (через пробел)
-            <input type="text" name="keywords" value="{{ keywords or '' }}" placeholder="flask docker api">
-        </label>
-
-        <button type="submit">Найти и сохранить в JSON</button>
-    </form>
-
-    {% if vacancies %}
-        <section>
-            <h2>Результаты</h2>
-            {% if vacancies[0] is string %}
-                <p>{{ vacancies[0] }}</p>
-            {% else %}
-                <ul class="vacancy-list">
-                    {% for vacancy in vacancies %}
-                        <li>
-                            <h3>{{ vacancy.title }}</h3>
-                            <p><b>Зарплата:</b> {{ vacancy.salary }}</p>
-                            <p><b>Описание:</b> {{ vacancy.description }}</p>
-                            <a href="{{ vacancy.link }}" target="_blank" rel="noopener noreferrer">Открыть вакансию</a>
-                        </li>
-                    {% endfor %}
-                </ul>
+              </ul>
             {% endif %}
-        </section>
-    {% endif %}
-</main>
+          {% endwith %}
+
+          <form action="{{ url_for('search') }}" method="post">
+            <input class="field" type="text" name="query" value="{{ query or '' }}" placeholder="Keywords" required />
+            <input class="field" type="number" name="top_n" min="1" value="{{ top_n or '10' }}" placeholder="Top N" required />
+            <input class="field" type="text" name="salary_range" value="{{ salary_range or '0-10000000' }}" placeholder="Salary range (100000-300000)" required />
+            <input class="field" type="text" name="keywords" value="{{ keywords or '' }}" placeholder="Skills (flask docker api)" />
+            <button class="submit" type="submit">Find a job</button>
+          </form>
+        </div>
+
+        <div class="jobs-list">
+          {% if vacancies and vacancies[0] is not string %}
+            {% for vacancy in vacancies %}
+              <div class="job-item">
+                <div class="job-row">
+                  <div class="job-title">{{ vacancy.title }}</div>
+                  <div class="job-company">Employer</div>
+                </div>
+                <div class="job-desc">{{ vacancy.description }}</div>
+              </div>
+            {% endfor %}
+          {% elif vacancies and vacancies[0] is string %}
+            <div class="job-item">
+              <div class="job-title">{{ vacancies[0] }}</div>
+            </div>
+          {% else %}
+            <div class="job-item">
+              <div class="job-row">
+                <div class="job-title">Backend Developer (Python / Django)</div>
+                <div class="job-company">Google</div>
+              </div>
+              <div class="job-desc">We are looking for a Backend Developer to build and maintain scalable backend systems...</div>
+            </div>
+
+            <div class="job-item">
+              <div class="job-row">
+                <div class="job-title">Frontend Developer (React)</div>
+                <div class="job-company">Amazon</div>
+              </div>
+              <div class="job-desc">Join our team to build modern and responsive user interfaces for web applications...</div>
+            </div>
+
+            <div class="job-item">
+              <div class="job-row">
+                <div class="job-title">Data Analyst</div>
+                <div class="job-company">Microsoft</div>
+              </div>
+              <div class="job-desc">Analyze data, build reports, and generate insights to support strategic decisions...</div>
+            </div>
+
+            <div class="job-item">
+              <div class="job-row">
+                <div class="job-title">DevOps Engineer</div>
+                <div class="job-company">OpenAI</div>
+              </div>
+              <div class="job-desc">Manage infrastructure, automate deployments, and ensure reliable service delivery...</div>
+            </div>
+          {% endif %}
+
+          <div class="jobs-btn-wrap">
+            <a class="btn small" href="#">•&nbsp;&nbsp;Explore Jobs</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pattern-section features" id="companies">
+      <div class="features-inner">
+        <h2 class="features-title-1 serif">Built for your career</h2>
+        <h3 class="features-title-2">Designed to get you hired</h3>
+
+        <div class="cards">
+          <div class="card">
+            <div class="icon plus"></div>
+            <h3>Smart job matching</h3>
+            <p>We connect you with jobs that fit your skills, experience, and salary expectations — no more endless scrolling.</p>
+          </div>
+
+          <div class="card">
+            <div class="icon globe"></div>
+            <h3>All opportunities in one place</h3>
+            <p>Browse jobs from top companies, startups, and remote teams — everything in one simple platform.</p>
+          </div>
+
+          <div class="card">
+            <div class="icon arrow"></div>
+            <h3>Faster results, less effort</h3>
+            <p>Apply in seconds, track responses, and move forward in your career faster and easier.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonial">
+      <div class="testimonial-grid">
+        <div class="portrait">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80" alt="testimonial portrait">
+        </div>
+
+        <div>
+          <div class="quote-mark">“</div>
+          <p class="quote">Finally found a platform that shows relevant jobs. No spam, no useless offers — just real opportunities.</p>
+          <div class="author">Maria Chen</div>
+          <div class="role">Data Analyst</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <h2>Ready to find your next job?</h2>
+      <a class="btn small" href="#jobs">•&nbsp;&nbsp;Get started</a>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-top">
+        <div class="footer-links">
+          <a href="#">JobSearch</a>
+          <a href="#">Donate</a>
+          <a href="#">About</a>
+        </div>
+        <div>© 2026 · All rights reserved</div>
+      </div>
+      <div class="footer-art"></div>
+      <h2 class="footer-logo">JobSearch</h2>
+    </footer>
+  </div>
 </body>
 </html>
