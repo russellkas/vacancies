@@ -54,6 +54,8 @@
     .job-item{border-top:1px solid var(--line);padding:16px 0 18px}
     .job-row{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:12px}
     .job-title{font-size:18px;line-height:1.2;font-weight:600;letter-spacing:-0.03em}
+    .job-link{display:inline-block;text-decoration:none;transition:transform .15s ease}
+    .job-link:hover{transform:translateY(-2px)}
     .job-company{font-size:12px;color:#9b9b9b;white-space:nowrap;margin-top:3px}
     .job-desc{
       font-size:16px;
@@ -176,7 +178,7 @@
               {% endif %}
             {% endwith %}
 
-            <form action="{{ url_for('search') }}" method="post">
+            <form action="{{ url_for('search') }}#jobs" method="post">
               <input class="field" type="text" name="query" value="{{ query or '' }}" placeholder="Keywords" required />
               <input class="field" type="number" name="top_n" min="1" value="{{ top_n or '10' }}" placeholder="Top N" required />
               <input class="field" type="text" name="salary_range" value="{{ salary_range or '0-10000000' }}" placeholder="Salary range (100000-300000)" required />
@@ -190,7 +192,13 @@
               {% for vacancy in vacancies %}
                 <div class="job-item">
                   <div class="job-row">
-                    <div class="job-title">{{ vacancy.title }}</div>
+                    <div class="job-title">
+                      {% if vacancy.link %}
+                        <a class="job-link" href="{{ vacancy.link }}" target="_blank" rel="noopener noreferrer">{{ vacancy.title }}</a>
+                      {% else %}
+                        {{ vacancy.title }}
+                      {% endif %}
+                    </div>
                     <div class="job-company">{{ vacancy.employer }}</div>
                   </div>
                   <div class="job-desc">{{ vacancy.description }}</div>
@@ -305,5 +313,12 @@
       </div>
     </footer>
   </div>
+  <script>
+    if (window.location.pathname === "{{ url_for('search') }}") {
+      window.addEventListener('load', () => {
+        document.getElementById('jobs')?.scrollIntoView({ behavior: 'auto' });
+      });
+    }
+  </script>
 </body>
 </html>
